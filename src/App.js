@@ -10,6 +10,13 @@ import './App.css';
 import { Layout } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
+const axios = require('axios').default;
+
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+axios.defaults.headers.common['Authorization'] = localStorage.getItem('bearer_token');
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+
+
 const App = () => {
   return (
     <Layout>

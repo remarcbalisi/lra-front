@@ -6,11 +6,13 @@ import {
   Button,
   Checkbox
 } from 'antd';
+import API from "../../helpers/api"
 
 const Login = () => {
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     console.log('Success:', values);
-    
+    const {data} = await API.post('/user/login', values)
+    console.log(data)
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -29,8 +31,8 @@ const Login = () => {
           onFinishFailed={onFinishFailed}
         >
           <Form.Item
-            label="Username"
-            name="username"
+            label="Email"
+            name="email"
             rules={[
               {
                 required: true,
