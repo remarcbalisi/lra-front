@@ -11,8 +11,8 @@ import API from "../../helpers/api"
 const Login = () => {
   const onFinish = async (values) => {
     console.log('Success:', values);
-    const {data} = await API.post('/user/login', values)
-    console.log(data)
+    const {data: {data}} = await API.post('/user/login', values)
+    localStorage.setItem('bearer_token', "Bearer " + data.token);
   };
 
   const onFinishFailed = (errorInfo) => {
