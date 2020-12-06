@@ -7,12 +7,25 @@ import {
   Checkbox
 } from 'antd';
 import API from "../../helpers/api"
+import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
 
 const Login = () => {
+  const history = useHistory()
+  const bearer_token = localStorage.getItem('bearer_token')
+
+  useEffect(async () => {
+    
+    if (bearer_token) {
+      history.push("/home");
+    }
+
+  }, []);
+
   const onFinish = async (values) => {
-    console.log('Success:', values);
     const {data: {data}} = await API.post('/user/login', values)
     localStorage.setItem('bearer_token', "Bearer " + data.token);
+    history.push("/home");
   };
 
   const onFinishFailed = (errorInfo) => {
