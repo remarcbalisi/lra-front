@@ -13,11 +13,16 @@ const actions = {
     store.setState({ user: data })
   },
   getUsers: async(store) => {
-    const {data: {data}} = await API.get('admin/user')
+    const {data: {data}} = await API.get('admin/user');
+    console.log(data);
     store.setState({
       ...store.state,
       users: data
     })
+  },
+  updateUser: async(store, payload) => {
+    const {data: {data}} = await API.put(`admin/user/${payload.id}`, payload)
+    console.log(data)
   }
 };
 
