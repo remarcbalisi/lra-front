@@ -1,5 +1,6 @@
 import {
   Row,
+  Col,
   Table,
   Space,
   Modal,
@@ -54,7 +55,17 @@ const Home = () => {
   ];
 
   useEffect(() => {
-    authActions.getUsers()
+    authActions.getUsers();
+
+    return () => {
+      setModalState({
+        visible: false,
+        edit_user: {
+          name: ''
+        },
+        loading: false
+      });
+    }
   }, []);
 
   const showModal = (user) => {
@@ -67,9 +78,17 @@ const Home = () => {
 
   const onFinish = async (values) => {
     setModalState({ ...modalState, loading: true })
-    values['role'] = modalState.edit_user.roles[0].name
-    values['id'] = modalState.edit_user.id
-    await authActions.updateUser(values)
+  
+    if(modalState.edit_user.id) {
+      values['role'] = modalState.edit_user.roles[0].name
+      values['id'] = modalState.edit_user.id
+      await authActions.updateUser(values)      
+    }
+    else {
+      values['role'] = 'customer';
+      await authActions.createUser(values);
+    }
+
     setModalState({ ...modalState, loading: false, visible: false })
     authActions.getUsers()
   };
@@ -77,6 +96,15 @@ const Home = () => {
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+
+  const handleCreateUser = () => {
+    showModal({
+      id: '',
+      name: '',
+      email: '',
+      password: ''
+    });
+  }
 
   const RenderModal = () => {
     return (
@@ -104,7 +132,7 @@ const Home = () => {
               name="name"
               rules={[
                 {
-                  required: false,
+                  required: true,
                   message: 'Please input your username!',
                 },
               ]}
@@ -117,7 +145,7 @@ const Home = () => {
               name="email"
               rules={[
                 {
-                  required: false,
+                  required: true,
                   message: 'Please input your email!',
                 },
               ]}
@@ -128,6 +156,18 @@ const Home = () => {
             <Form.Item
               label="Password"
               name="password"
+              rules={[
+                {
+                  required: false,
+                  message: 'Please input your password!',
+                },
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+            <Form.Item
+              label="Confirm Password"
+              name="password_confirmation"
               rules={[
                 {
                   required: false,
@@ -149,13 +189,18 @@ const Home = () => {
   }
 
   return (
-    <Row 
-      justify="center" 
-      align="middle" 
-      style={{ paddingTop: "2%", height: "100vh", backgroundColor: "white" }}>
-        <RenderModal />
-        <Table dataSource={auth.users} columns={users_columns} rowKey="id"/>
-    </Row>
+    <div style={{ height: "100vh", backgroundColor: "white" }}>
+      <RenderModal />
+      <Row
+        style={{ paddingTop: "2%"}}>
+          <Col span={12} offset={6} style={{ textAlignLast: 'end' }}>
+            <Button type="primary" onClick={() => handleCreateUser()}>Create new</Button>
+          </Col>
+          <Col span={12} offset={6}>
+            <Table dataSource={auth.users} columns={users_columns} rowKey="id"/>
+          </Col>
+      </Row>
+    </div>
   )
 }
 

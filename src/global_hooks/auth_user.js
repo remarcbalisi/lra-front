@@ -21,9 +21,13 @@ const actions = {
     })
   },
   updateUser: async(store, payload) => {
-    const {data: {data}} = await API.put(`admin/user/${payload.id}`, payload)
+    const {data: {data}} = await API.put(`admin/user/${payload.id}`, payload);
+    console.log(data);
+  },
+  createUser: async(store, payload) => {
+    const {data: {data}} = await API.post(`admin/user`, payload);
     console.log(data)
-  }
+  },
 };
 
 const useGlobalAuthUser = globalHook(React, initialState, actions);
