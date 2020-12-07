@@ -28,6 +28,9 @@ const actions = {
     const {data: {data}} = await API.post(`admin/user`, payload);
     console.log(data)
   },
+  deleteUser: async (store, payload) => {
+    await API.delete(`admin/user/${payload.id}`);
+  }
 };
 
 const useGlobalAuthUser = globalHook(React, initialState, actions);

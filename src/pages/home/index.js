@@ -6,7 +6,9 @@ import {
   Modal,
   Button,
   Form,
-  Input
+  Input,
+  Popconfirm,
+  message
 } from 'antd';
 import useGlobalAuthUser from "../../global_hooks/auth_user"
 import React, {useEffect, useState} from "react"
@@ -48,7 +50,15 @@ const Home = () => {
             onClick={()=> showModal(record)}>
             Edit
           </span>
-          <a>Delete</a>
+          <Popconfirm
+              title={`Are you sure to delete ${record.name}?`}
+              onConfirm={(e) => confirm(e, record)}
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No"
+          >
+            <a href="#" style={{color: "red"}}>Delete</a>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -106,10 +116,20 @@ const Home = () => {
     });
   }
 
+  const confirm = async (e, user) => {
+    console.log(e);
+    await authActions.deleteUser({id: user.id})
+    message.success(`Successfully deleted ${user.name}`);
+    await authActions.getUsers();
+  }
+
+  const cancel = (e) => {
+    console.log(e);
+  }
+
   const RenderModal = () => {
     const modal_title = modalState.edit_user.id === '' ? 'Create' : `Edit ${modalState.edit_user.name}`
     const button_label = modalState.edit_user.id === '' ? 'Create' : 'Update'
-    console.log(modalState.edit_user.id === '')
     return (
       <Modal
           visible={modalState.visible}
