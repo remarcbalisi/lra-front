@@ -107,10 +107,11 @@ const Home = () => {
   }
 
   const RenderModal = () => {
+    const modal_title = modalState.edit_user.id == '' ? 'Create' : `Edit ${modalState.edit_user.name}`
     return (
       <Modal
           visible={modalState.visible}
-          title={`Edit ${modalState.edit_user.name}`}
+          title={modal_title}
           onCancel={handleCancel}
           footer={[
             <Button key="back" onClick={handleCancel}>
