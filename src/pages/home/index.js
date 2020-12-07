@@ -9,7 +9,7 @@ import {
   Input
 } from 'antd';
 import useGlobalAuthUser from "../../global_hooks/auth_user"
-import {useEffect, useState} from "react"
+import React, {useEffect, useState} from "react"
 
 const Home = () => {
   const [auth, authActions] = useGlobalAuthUser();
@@ -107,7 +107,9 @@ const Home = () => {
   }
 
   const RenderModal = () => {
-    const modal_title = modalState.edit_user.id == '' ? 'Create' : `Edit ${modalState.edit_user.name}`
+    const modal_title = modalState.edit_user.id === '' ? 'Create' : `Edit ${modalState.edit_user.name}`
+    const button_label = modalState.edit_user.id === '' ? 'Create' : 'Update'
+    console.log(modalState.edit_user.id === '')
     return (
       <Modal
           visible={modalState.visible}
@@ -123,6 +125,8 @@ const Home = () => {
             name="basic"
             initialValues={{
               remember: true,
+              name: modalState.edit_user.name,
+              email: modalState.edit_user.email,
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
@@ -138,7 +142,7 @@ const Home = () => {
                 },
               ]}
             >
-              <Input defaultValue={modalState.edit_user.name}/>
+              <Input />
             </Form.Item>
 
             <Form.Item
@@ -151,7 +155,7 @@ const Home = () => {
                 },
               ]}
             >
-              <Input defaultValue={modalState.edit_user.email} />
+              <Input />
             </Form.Item>
 
             <Form.Item
@@ -166,22 +170,28 @@ const Home = () => {
             >
               <Input.Password />
             </Form.Item>
-            <Form.Item
-              label="Confirm Password"
-              name="password_confirmation"
-              rules={[
-                {
-                  required: false,
-                  message: 'Please input your password!',
-                },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
+
+            {
+              modalState.edit_user.id === '' &&
+              (
+                <Form.Item
+                  label="Confirm Password"
+                  name="password_confirmation"
+                  rules={[
+                    {
+                      required: false,
+                      message: 'Please input your password!',
+                    },
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+              )
+            }
 
             <Form.Item>
               <Button type="primary" htmlType="submit">
-                Update
+                {button_label}
               </Button>
             </Form.Item>
           </Form>
